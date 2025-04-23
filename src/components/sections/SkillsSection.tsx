@@ -67,43 +67,68 @@ export const SkillsSection = () => {
   };
 
   return (
-    <section id="skills" className="section-padding">
+    <motion.section
+      id="skills"
+      className="section-padding"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true }}
+    >
       <div className="container max-w-7xl mx-auto px-6">
         {/* Section Header */}
-        <div className="mb-16 text-center">
+        <motion.div
+          className="mb-16 text-center"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={{
+            hidden: {},
+            show: { transition: { staggerChildren: 0.1 } }
+          }}
+        >
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            variants={{
+              hidden: { opacity: 0, y: 25 },
+              show: { opacity: 1, y: 0 }
+            }}
             transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
           >
             <h2 className="font-display font-bold text-3xl md:text-4xl mb-4">
               My <span className="text-gradient">Skills</span>
             </h2>
           </motion.div>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
+            variants={{
+              hidden: { opacity: 0, y: 35 },
+              show: { opacity: 1, y: 0 }
+            }}
+            transition={{ duration: 0.57, delay: 0.1 }}
             className="text-muted-foreground text-lg max-w-2xl mx-auto"
           >
             A comprehensive overview of my expertise across design, tools, development, and soft skills.
           </motion.p>
-        </div>
+        </motion.div>
 
         {/* Category Tabs */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.4, delay: 0.18, type: "spring" }}
           viewport={{ once: true }}
           className="flex flex-wrap justify-center gap-4 mb-12"
         >
           {skillCategories.map((category) => (
-            <button
+            <motion.button
               key={category.id}
               onClick={() => handleCategoryChange(category.id)}
+              whileHover={{
+                scale: 1.08,
+                boxShadow: "0 2px 18px rgba(126,105,171,0.12)",
+                backgroundColor: "rgba(155,135,245,0.11)",
+                color: "#9b87f5"
+              }}
+              transition={{ type: "spring", stiffness: 320 }}
               className={cn(
                 "py-2 px-6 rounded-full transition-all duration-300 text-sm font-medium relative",
                 activeCategory === category.id
@@ -119,39 +144,50 @@ export const SkillsSection = () => {
                 />
               )}
               {category.name}
-            </button>
+            </motion.button>
           ))}
         </motion.div>
 
-        {/* Skills Display */}
+        {/* Skills Display with grid bounce */}
         <div className="relative">
           {skillCategories.map((category) => (
-            <div
+            <motion.div
               key={category.id}
               className={cn(
                 "w-full",
                 activeCategory === category.id ? "block" : "hidden"
               )}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, type: "spring", bounce: 0.09 }}
+              viewport={{ once: true }}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 {category.skills.map((skill, index) => (
                   <motion.div
                     key={skill.name}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    transition={{ duration: 0.5, delay: index * 0.07 }}
                     viewport={{ once: true }}
                     className="relative"
                   >
                     <div className="flex justify-between items-center mb-2">
                       <h3 className="text-lg font-medium">{skill.name}</h3>
-                      <span className="text-muted-foreground">{skill.level}%</span>
+                      <motion.span
+                        initial={{ opacity: 0, x: 15 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.38, delay: 0.02 * index }}
+                        className="text-muted-foreground"
+                      >
+                        {skill.level}%
+                      </motion.span>
                     </div>
                     <div className="h-2 bg-secondary rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${skill.level}%` }}
-                        transition={{ duration: 1, delay: index * 0.1 }}
+                        transition={{ duration: 1.1, delay: index * 0.09 }}
                         viewport={{ once: true }}
                         className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
                       />
@@ -159,26 +195,36 @@ export const SkillsSection = () => {
                   </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* Additional Info */}
+        {/* Additional Info with fade in-up */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 21 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
+          transition={{ duration: 0.49, delay: 0.38 }}
           viewport={{ once: true }}
           className="mt-16 p-6 rounded-xl bg-secondary/50 dark:bg-secondary/20 border border-border/50"
         >
-          <h3 className="text-xl font-medium mb-4">Continuous Learning</h3>
-          <p className="text-muted-foreground">
-            I'm constantly expanding my skillset through courses, workshops, and
-            hands-on projects. Currently learning: Motion Design, 3D Modeling, and
-            Advanced Animation Techniques.
-          </p>
+          <motion.h3
+            initial={{ opacity: 0, x: -17 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.09 }}
+            className="text-xl font-medium mb-4"
+          >
+            Continuous Learning
+          </motion.h3>
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.13 }}
+            className="text-muted-foreground"
+          >
+            I'm constantly expanding my skillset through courses, workshops, and hands-on projects. Currently learning: Motion Design, 3D Modeling, and Advanced Animation Techniques.
+          </motion.p>
         </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };

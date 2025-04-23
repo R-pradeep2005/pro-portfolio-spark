@@ -1,4 +1,3 @@
-
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -15,8 +14,15 @@ export const AboutSection = () => {
   const imageOpacity = useTransform(scrollYProgress, [0, 0.3], [0.3, 1]);
 
   return (
-    <section ref={ref} id="about" className="section-padding relative overflow-hidden">
-      {/* Background decoration */}
+    <motion.section
+      ref={ref}
+      id="about"
+      initial={{ opacity: 0, y: 32, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.75, type: "spring", bounce: 0.16 }}
+      viewport={{ once: true }}
+      className="section-padding relative overflow-hidden"
+    >
       <div className="absolute inset-0 overflow-hidden -z-10">
         <motion.div
           style={{ scale: imageScale, opacity: imageOpacity }}
@@ -30,20 +36,17 @@ export const AboutSection = () => {
 
       <div className="container max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Image Column */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
+            initial={{ opacity: 0, x: -60, rotate: -2 }}
+            whileInView={{ opacity: 1, x: 0, rotate: 0 }}
+            transition={{ duration: 0.74, type: "spring", delay: 0.08 }}
             viewport={{ once: true }}
             className="relative"
           >
             <div className="aspect-square max-w-md mx-auto lg:mx-0 relative">
-              {/* Main image with border and glass effect */}
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/5 blur-xl" />
               
               <div className="absolute inset-0 rounded-2xl glass dark:glass-dark border border-white/20 dark:border-white/10 overflow-hidden p-4">
-                {/* Placeholder for actual profile image */}
                 <div className="w-full h-full rounded-xl bg-muted/50 flex items-center justify-center">
                   <div className="text-center">
                     <div className="text-5xl font-bold text-muted-foreground/30">Profile</div>
@@ -52,7 +55,6 @@ export const AboutSection = () => {
                 </div>
               </div>
 
-              {/* Decorative elements */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.5 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -79,25 +81,43 @@ export const AboutSection = () => {
             </div>
           </motion.div>
 
-          {/* Content Column */}
-          <div className="space-y-8">
+          <motion.div
+            className="space-y-8"
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            variants={{
+              hidden: {},
+              show: {
+                transition: { staggerChildren: 0.09, delayChildren: 0.26 }
+              }
+            }}
+          >
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
+              variants={{
+                hidden: { opacity: 0, y: 32 },
+                show: { opacity: 1, y: 0 }
+              }}
+              transition={{ duration: 0.48, type: "spring" }}
             >
               <h2 className="font-display font-bold text-3xl md:text-4xl mb-2">
                 About <span className="text-gradient">Me</span>
               </h2>
-              <div className="h-1 w-20 bg-primary/30 rounded-full mb-6"></div>
+              <motion.div
+                className="h-1 w-20 bg-primary/30 rounded-full mb-6"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                transition={{ duration: 0.55, delay: 0.12, type: "spring" }}
+                style={{ originX: 0 }}
+              />
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              viewport={{ once: true }}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: { opacity: 1, y: 0 }
+              }}
+              transition={{ duration: 0.5, delay: 0.16, type: "spring" }}
               className="space-y-4"
             >
               <p className="text-lg text-muted-foreground">
@@ -112,10 +132,11 @@ export const AboutSection = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: { opacity: 1, y: 0 }
+              }}
+              transition={{ duration: 0.5, delay: 0.2, type: "spring" }}
               className="pt-4 space-y-2"
             >
               <div className="flex items-center gap-2">
@@ -133,23 +154,23 @@ export const AboutSection = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              viewport={{ once: true }}
+              variants={{
+                hidden: { opacity: 0, scale: 0.93 },
+                show: { opacity: 1, scale: 1 }
+              }}
+              transition={{ duration: 0.47, delay: 0.3, type: "spring", bounce: 0.2 }}
               className="pt-4"
             >
-              <Button
-                size="lg"
-                className="group rounded-full"
-              >
-                <span>Download Resume</span>
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              <motion.div whileHover={{ scale: 1.06, boxShadow: "0 2px 32px rgba(155, 135, 245, 0.14)" }}>
+                <Button size="lg" className="group rounded-full">
+                  <span>Download Resume</span>
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </motion.div>
             </motion.div>
-          </div>
+          </motion.div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };

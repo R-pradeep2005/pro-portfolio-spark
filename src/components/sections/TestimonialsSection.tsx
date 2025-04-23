@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -54,9 +54,9 @@ export const TestimonialsSection = () => {
         {/* Section Header */}
         <div className="mb-16 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, scale: 0.97, y: 18 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.64 }}
             viewport={{ once: true }}
           >
             <h2 className="font-display font-bold text-3xl md:text-4xl mb-4">
@@ -64,9 +64,9 @@ export const TestimonialsSection = () => {
             </h2>
           </motion.div>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ duration: 0.52, delay: 0.09 }}
             viewport={{ once: true }}
             className="text-muted-foreground text-lg max-w-2xl mx-auto"
           >
@@ -74,75 +74,83 @@ export const TestimonialsSection = () => {
           </motion.p>
         </div>
 
-        {/* Testimonials Carousel */}
+        {/* Testimonials Carousel with animated presence */}
         <div className="relative bg-background/50 dark:bg-background/20 rounded-2xl backdrop-blur-sm p-8 md:p-12 border border-border/50 max-w-4xl mx-auto">
           {/* Quote icon */}
-          <div className="absolute -top-6 left-6">
+          <motion.div
+            className="absolute -top-6 left-6"
+            initial={{ scale: 0, rotate: -45 }}
+            whileInView={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.7, type: "spring", bounce: 0.34 }}
+            viewport={{ once: true }}
+          >
             <div className="bg-primary rounded-full p-2 shadow-lg">
               <Quote className="h-6 w-6 text-primary-foreground" />
             </div>
-          </div>
+          </motion.div>
 
           <div className="relative overflow-hidden">
             <div className="relative min-h-[320px]">
-              {testimonials.map((testimonial, index) => (
+              <AnimatePresence mode="wait">
                 <motion.div
-                  key={testimonial.id}
-                  initial={{ opacity: 0, x: 100 }}
-                  animate={{
-                    opacity: currentIndex === index ? 1 : 0,
-                    x: currentIndex === index ? 0 : 100,
-                    position: currentIndex === index ? "relative" : "absolute",
-                  }}
-                  transition={{ duration: 0.5 }}
-                  className={cn(
-                    "w-full",
-                    currentIndex === index ? "block" : "hidden"
-                  )}
+                  key={testimonials[currentIndex].id}
+                  initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -50, scale: 1.08 }}
+                  transition={{ duration: 0.7, type: "spring" }}
+                  className="w-full"
                 >
                   <blockquote>
                     <p className="text-xl md:text-2xl leading-relaxed mb-8">
-                      "{testimonial.content}"
+                      "{testimonials[currentIndex].content}"
                     </p>
-                    <div className="flex items-center">
+                    <motion.div
+                      initial={{ opacity: 0, x: 30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.46, delay: 0.17 }}
+                      className="flex items-center"
+                    >
                       <div className="w-12 h-12 rounded-full overflow-hidden mr-4 bg-muted">
                         <img
-                          src={testimonial.avatar}
-                          alt={testimonial.author}
+                          src={testimonials[currentIndex].avatar}
+                          alt={testimonials[currentIndex].author}
                           className="w-full h-full object-cover"
                         />
                       </div>
                       <div>
                         <cite className="font-medium text-foreground not-italic">
-                          {testimonial.author}
+                          {testimonials[currentIndex].author}
                         </cite>
                         <p className="text-sm text-muted-foreground">
-                          {testimonial.position}
+                          {testimonials[currentIndex].position}
                         </p>
                       </div>
-                    </div>
+                    </motion.div>
                   </blockquote>
                 </motion.div>
-              ))}
+              </AnimatePresence>
             </div>
           </div>
 
-          {/* Navigation */}
+          {/* Navigation with hover/press animation */}
           <div className="flex justify-center mt-8 gap-4">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={prevTestimonial}
-              className="rounded-full hover:bg-primary/10 hover:text-primary"
-              aria-label="Previous testimonial"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
+            <motion.div whileTap={{ scale: 0.92 }} whileHover={{ scale: 1.06 }}>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={prevTestimonial}
+                className="rounded-full hover:bg-primary/10 hover:text-primary"
+                aria-label="Previous testimonial"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            </motion.div>
             <div className="flex gap-2 items-center">
               {testimonials.map((_, index) => (
-                <button
+                <motion.button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
+                  whileHover={{ scale: 1.24 }}
                   className={cn(
                     "w-2.5 h-2.5 rounded-full transition-all duration-300",
                     currentIndex === index
@@ -153,15 +161,17 @@ export const TestimonialsSection = () => {
                 />
               ))}
             </div>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={nextTestimonial}
-              className="rounded-full hover:bg-primary/10 hover:text-primary"
-              aria-label="Next testimonial"
-            >
-              <ArrowRight className="h-4 w-4" />
-            </Button>
+            <motion.div whileTap={{ scale: 0.92 }} whileHover={{ scale: 1.06 }}>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={nextTestimonial}
+                className="rounded-full hover:bg-primary/10 hover:text-primary"
+                aria-label="Next testimonial"
+              >
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </motion.div>
           </div>
         </div>
       </div>
